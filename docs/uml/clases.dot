@@ -1,0 +1,149 @@
+// Diagrama de clases UML — Calculadora de Cálculo
+// Generar la imagen:  dot -Tpng -Gdpi=150 clases.dot -o clases.png
+digraph Clases {
+    graph [rankdir=TB, fontname="Inter", fontsize=12, nodesep=0.35, ranksep=0.55, newrank=true, pad=0.3,
+           label="Diagrama de clases — Calculadora de Cálculo (Integrales y Derivadas)", labelloc=t, fontsize=18];
+    node  [shape=plain, fontname="Inter", fontsize=10];
+    edge  [fontname="Inter", fontsize=9, color="#475569"];
+
+    // ------------------------------------------------------------ paquete vista
+    subgraph cluster_vista {
+        label="paquete vista (interfaz Swing)"; style="rounded,filled"; fillcolor="#fff7ed"; color="#fdba74"; fontsize=12;
+        Main [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#fed7aa"><b>Main</b></td></tr>
+            <tr><td align="left">+ main(args: String[])</td></tr></table>>];
+        VentanaPrincipal [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#fed7aa"><b>VentanaPrincipal</b><br/><font point-size="8">extends JFrame</font></td></tr>
+            <tr><td align="left">- analizador: AnalizadorSintactico<br align="left"/>- campoFuncion: JTextField<br align="left"/>- comboVariable: JComboBox<br align="left"/>- grafica: PanelGrafica<br align="left"/>- historial: DefaultListModel&lt;Consulta&gt;<br align="left"/></td></tr>
+            <tr><td align="left">- calcular()<br align="left"/>- crearOperacion(c: Consulta): Operacion<br align="left"/>- actualizarGrafica(r: ResultadoCalculo)<br align="left"/>- agregarAlHistorial(...)<br align="left"/></td></tr></table>>];
+        PanelGrafica [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#fed7aa"><b>PanelGrafica</b><br/><font point-size="8">extends JPanel</font></td></tr>
+            <tr><td align="left">- f, g, tangente: Expresion<br align="left"/>- xMin, xMax, yMin, yMax: double<br align="left"/></td></tr>
+            <tr><td align="left">+ mostrar(...)<br align="left"/># paintComponent(g: Graphics)<br align="left"/></td></tr></table>>];
+        FormatoHtml [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#fed7aa"><b>FormatoHtml</b></td></tr>
+            <tr><td align="left">+ resultado(r): String<br align="left"/>+ expresion(e): String<br align="left"/></td></tr></table>>];
+        Consulta [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#fed7aa"><b>Consulta</b></td></tr>
+            <tr><td align="left">- funcion, variable: String<br align="left"/>- tipo: Tipo<br align="left"/>- orden: int<br align="left"/>- punto, limiteA, limiteB: String<br align="left"/></td></tr></table>>];
+        Otros [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#fed7aa"><b>Estilo · Ejemplos · BotonPrincipal</b></td></tr>
+            <tr><td align="left">colores, fuentes, ejemplos y botón naranja<br align="left"/></td></tr></table>>];
+    }
+
+    // ------------------------------------------------------------ paquete logica
+    subgraph cluster_logica {
+        label="paquete logica (operaciones y algoritmos)"; style="rounded,filled"; fillcolor="#eff6ff"; color="#93c5fd"; fontsize=12;
+        Operacion [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><i>«abstract»</i><br/><b><i>Operacion</i></b></td></tr>
+            <tr><td align="left"># variable: String<br align="left"/></td></tr>
+            <tr><td align="left">+ <i>getNombre(): String</i><br align="left"/>+ <i>ejecutar(f: Expresion): ResultadoCalculo</i><br align="left"/></td></tr></table>>];
+        Derivada [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>Derivada</b></td></tr>
+            <tr><td align="left">- orden: int<br align="left"/>- punto: Expresion<br align="left"/></td></tr>
+            <tr><td align="left">+ ejecutar(f): ResultadoCalculo<br align="left"/></td></tr></table>>];
+        IntegralIndefinida [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>IntegralIndefinida</b></td></tr>
+            <tr><td align="left">+ ejecutar(f): ResultadoCalculo<br align="left"/></td></tr></table>>];
+        IntegralDefinida [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>IntegralDefinida</b></td></tr>
+            <tr><td align="left">- limiteInferior: Expresion<br align="left"/>- limiteSuperior: Expresion<br align="left"/></td></tr>
+            <tr><td align="left">+ ejecutar(f): ResultadoCalculo<br align="left"/></td></tr></table>>];
+        ResultadoCalculo [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>ResultadoCalculo</b></td></tr>
+            <tr><td align="left">- resultado: Expresion<br align="left"/>- valorExacto: Expresion<br align="left"/>- valorNumerico: Double<br align="left"/>- metodos: List&lt;String&gt;<br align="left"/>- avisos: List&lt;String&gt;<br align="left"/></td></tr></table>>];
+        AnalizadorSintactico [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>AnalizadorSintactico</b></td></tr>
+            <tr><td align="left">- tokens: List&lt;Token&gt;<br align="left"/></td></tr>
+            <tr><td align="left">+ analizar(texto: String): Expresion<br align="left"/>- tokenizar(texto)<br align="left"/>- expresion() / termino() / potencia()<br align="left"/></td></tr></table>>];
+        Integrador [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>Integrador</b></td></tr>
+            <tr><td align="left">- metodos: Set&lt;String&gt;<br align="left"/></td></tr>
+            <tr><td align="left">+ integrar(f, v): Expresion<br align="left"/>- sustitucion(...)<br align="left"/>- porPartes(...)<br align="left"/>- racional(...)<br align="left"/>- esAntiderivada(F, f, v): boolean<br align="left"/></td></tr></table>>];
+        IntegradorNumerico [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>IntegradorNumerico</b></td></tr>
+            <tr><td align="left">+ integrar(f, a, b): Resultado<br align="left"/>+ buscarDiscontinuidad(f, a, b): Double<br align="left"/></td></tr></table>>];
+        Raices [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>Raices</b> · <b>Complejo</b></td></tr>
+            <tr><td align="left">+ calcular(p: Polinomio): Complejo[]<br align="left"/></td></tr></table>>];
+        ErrorCalculo [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>ErrorCalculo</b><br/><font point-size="8">extends Exception</font></td></tr></table>>];
+        ErrorSintaxis [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bfdbfe"><b>ErrorSintaxis</b></td></tr>
+            <tr><td align="left">- posicion: int<br align="left"/></td></tr></table>>];
+    }
+
+    // ------------------------------------------------------------ paquete modelo
+    subgraph cluster_modelo {
+        label="paquete modelo (árbol de expresiones — patrón Composite)"; style="rounded,filled"; fillcolor="#f0fdf4"; color="#86efac"; fontsize=12;
+        Expresion [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><i>«abstract»</i><br/><b><i>Expresion</i></b></td></tr>
+            <tr><td align="left">+ <i>evaluar(valores: Map): double</i><br align="left"/>+ <i>derivar(variable: String): Expresion</i><br align="left"/>+ simplificar(): Expresion<br align="left"/>+ <i>sustituir(v: String, e: Expresion): Expresion</i><br align="left"/>+ <i>precedencia(): int</i><br align="left"/>+ <i>toString(): String</i><br align="left"/></td></tr></table>>];
+        Constante [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Constante</b></td></tr>
+            <tr><td align="left">- valor: double<br align="left"/>- nombre: String  (π, e)<br align="left"/></td></tr></table>>];
+        Variable [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Variable</b></td></tr>
+            <tr><td align="left">- nombre: String<br align="left"/></td></tr></table>>];
+        Binarias [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Suma · Resta · Producto</b></td></tr>
+            <tr><td align="left">- izquierda: Expresion<br align="left"/>- derecha: Expresion<br align="left"/></td></tr></table>>];
+        Division [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Division</b></td></tr>
+            <tr><td align="left">- numerador: Expresion<br align="left"/>- denominador: Expresion<br align="left"/></td></tr></table>>];
+        Potencia [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Potencia</b></td></tr>
+            <tr><td align="left">- base: Expresion<br align="left"/>- exponente: Expresion<br align="left"/></td></tr></table>>];
+        Negacion [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Negacion</b></td></tr>
+            <tr><td align="left">- operando: Expresion<br align="left"/></td></tr></table>>];
+        Funcion [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Funcion</b></td></tr>
+            <tr><td align="left">- tipo: TipoFuncion<br align="left"/>- argumento: Expresion<br align="left"/></td></tr></table>>];
+        TipoFuncion [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><i>«enum»</i><br/><b>TipoFuncion</b></td></tr>
+            <tr><td align="left">SEN, COS, TAN, ... LN, LOG, ABS<br align="left"/></td></tr>
+            <tr><td align="left">+ aplicar(x: double): double<br align="left"/>+ derivadaExterna(u): Expresion<br align="left"/>+ integral(u): Expresion<br align="left"/></td></tr></table>>];
+        Polinomio [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Polinomio</b></td></tr>
+            <tr><td align="left">- c: double[]<br align="left"/></td></tr>
+            <tr><td align="left">+ derivar(): Polinomio<br align="left"/>+ integrar(): Polinomio<br align="left"/>+ dividir(d): Polinomio[]<br align="left"/>+ desde(e, v): Polinomio<br align="left"/></td></tr></table>>];
+        Simplificador [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Simplificador</b></td></tr>
+            <tr><td align="left">+ formaFinal(e, v): Expresion<br align="left"/>~ simplificarSuma(e)<br align="left"/>~ simplificarProducto(e)<br align="left"/></td></tr></table>>];
+        Utilidades [label=<<table border="1" cellborder="0" cellspacing="0" cellpadding="4" bgcolor="white">
+            <tr><td bgcolor="#bbf7d0"><b>Numeros · Fraccion · Ops</b></td></tr>
+            <tr><td align="left">formato de números y atajos<br align="left"/></td></tr></table>>];
+    }
+
+    // ------------------------------------------------------------ herencia (triángulo vacío)
+    edge [arrowhead=onormal, arrowsize=1.1];
+    {Constante Variable Binarias Division Potencia Negacion Funcion} -> Expresion;
+    {Derivada IntegralIndefinida IntegralDefinida} -> Operacion;
+    ErrorSintaxis -> ErrorCalculo;
+
+    // ------------------------------------------------------------ composición y uso
+    edge [arrowhead=vee, arrowsize=0.8, style=solid];
+    Binarias -> Expresion [arrowhead=diamond, dir=back, arrowtail=diamond, label=" 2 hijos", style=invis];
+    Funcion -> TipoFuncion [label=" tipo"];
+    Main -> VentanaPrincipal [label=" crea"];
+    VentanaPrincipal -> PanelGrafica [arrowhead=diamond, dir=back, arrowtail=diamond, label=""];
+    VentanaPrincipal -> Consulta [style=dashed, label=" usa"];
+    VentanaPrincipal -> FormatoHtml [style=dashed, label=" usa"];
+    VentanaPrincipal -> AnalizadorSintactico [label=" analizador"];
+    VentanaPrincipal -> Operacion [style=dashed, label=" crea y ejecuta"];
+    Operacion -> ResultadoCalculo [style=dashed, label=" devuelve"];
+    AnalizadorSintactico -> Expresion [style=dashed, label=" construye"];
+    AnalizadorSintactico -> ErrorSintaxis [style=dashed, label=" lanza"];
+    IntegralIndefinida -> Integrador [style=dashed, label=" usa"];
+    IntegralDefinida -> Integrador [style=dashed, label=" usa"];
+    IntegralDefinida -> IntegradorNumerico [style=dashed, label=" usa"];
+    Integrador -> Polinomio [style=dashed, label=" usa"];
+    Integrador -> Raices [style=dashed, label=" usa"];
+    Derivada -> Simplificador [style=dashed, label=" usa"];
+    Expresion -> Expresion [dir=back, arrowtail=odiamond, headport=e, tailport=e, label=" hijos\n(Composite)"];
+    Expresion -> Simplificador [style=dashed, label=" simplificar()"];
+    Simplificador -> Polinomio [style=dashed];
+    Simplificador -> Utilidades [style=dashed];
+    Otros -> FormatoHtml [style=invis];
+}

@@ -1,0 +1,38 @@
+// Diagrama de casos de uso — Calculadora de Cálculo
+// Generar la imagen:  dot -Tpng -Gdpi=150 casos_de_uso.dot -o casos_de_uso.png
+digraph CasosDeUso {
+    graph [rankdir=LR, fontname="Inter", nodesep=0.28, ranksep=0.9, pad=0.3,
+           label="Diagrama de casos de uso — Calculadora de Cálculo", labelloc=t, fontsize=18];
+    node  [fontname="Inter", fontsize=11];
+    edge  [fontname="Inter", fontsize=9, color="#475569", arrowhead=none];
+
+    Usuario [shape=none, image="actor.png", label="Estudiante / usuario", labelloc=b, imagepos=tc, height=1.9, fixedsize=false];
+
+    subgraph cluster_sistema {
+        label="Sistema: Calculadora de Cálculo"; style="rounded"; color="#94a3b8"; fontsize=13;
+        node [shape=ellipse, style=filled, fillcolor="#fff7ed", color="#ea6c14", width=2.6];
+        CU1 [label="Escribir la función\n(teclado o botones)"];
+        CU2 [label="Elegir la variable\n(x o y)"];
+        CU3 [label="Calcular derivada\n(orden 1 a 5)"];
+        CU4 [label="Evaluar la derivada\nen un punto"];
+        CU5 [label="Calcular integral\nindefinida"];
+        CU6 [label="Calcular integral\ndefinida [a, b]"];
+        CU7 [label="Aproximar con\nmétodo numérico"];
+        CU8 [label="Validar la expresión\n(errores de sintaxis)", fillcolor="#eff6ff", color="#2563eb"];
+        CU9 [label="Revisar continuidad\n(integral impropia)", fillcolor="#eff6ff", color="#2563eb"];
+        CU10 [label="Ver la gráfica\n(área / tangente)"];
+        CU11 [label="Consultar historial"];
+        CU12 [label="Cargar un ejemplo"];
+        CU13 [label="Copiar el resultado"];
+    }
+
+    Usuario -> {CU1 CU2 CU3 CU5 CU6 CU10 CU11 CU12 CU13};
+
+    edge [style=dashed, arrowhead=vee, fontcolor="#334155"];
+    CU3 -> CU8 [label="«include»"];
+    CU5 -> CU8 [label="«include»"];
+    CU6 -> CU8 [label="«include»"];
+    CU6 -> CU9 [label="«include»"];
+    CU4 -> CU3 [label="«extend»"];
+    CU7 -> CU6 [label="«extend»\n(sin antiderivada)"];
+}

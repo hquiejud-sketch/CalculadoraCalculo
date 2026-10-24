@@ -1,0 +1,73 @@
+// Diagrama de actividad — proceso del botón "Calcular"
+// Generar la imagen:  dot -Tpng -Gdpi=150 actividad.dot -o actividad.png
+digraph Actividad {
+    graph [rankdir=TB, fontname="Inter", nodesep=0.45, ranksep=0.42, pad=0.3, splines=ortho,
+           label="Diagrama de actividad — proceso de cálculo", labelloc=t, fontsize=18];
+    node  [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#334155", fontname="Inter", fontsize=10.5, margin="0.18,0.08"];
+    edge  [fontname="Inter", fontsize=9, color="#475569", arrowhead=vee];
+
+    inicio [shape=circle, label="", width=0.28, style=filled, fillcolor="#111827"];
+    fin    [shape=doublecircle, label="", width=0.22, style=filled, fillcolor="#111827"];
+
+    a1 [label="El usuario escribe f(x), elige la variable\ny la operación, y presiona Calcular"];
+    a2 [label="AnalizadorSintactico:\n1) tokenizar el texto\n2) construir el árbol de Expresion", fillcolor="#eff6ff"];
+    d1 [shape=diamond, label="¿Error de\nsintaxis?", style=filled, fillcolor="#fef3c7", width=1.6];
+    e1 [label="Mostrar el mensaje de error\ny marcar la posición", fillcolor="#fee2e2"];
+    a3 [label="Crear la Operacion según la opción\n(polimorfismo)", fillcolor="#eff6ff"];
+    d2 [shape=diamond, label="¿Tipo de\noperación?", style=filled, fillcolor="#fef3c7", width=1.6];
+
+    // Derivada
+    b1 [label="Derivar n veces: cada nodo aplica su regla\n(suma, producto, cociente, cadena...)", fillcolor="#f0fdf4"];
+    b2 [label="Simplificar y ordenar\n(Simplificador.formaFinal)", fillcolor="#f0fdf4"];
+    d3 [shape=diamond, label="¿Evaluar en\nun punto?", style=filled, fillcolor="#fef3c7", width=1.6];
+    b3 [label="Sustituir x = a y calcular f'(a)", fillcolor="#f0fdf4"];
+
+    // Integral indefinida
+    c1 [label="Integrador: probar técnicas en orden\n(potencia, sustitución, por partes,\nfracciones parciales, identidades...)", fillcolor="#fff7ed"];
+    d4 [shape=diamond, label="¿Encontró\nF(x)?", style=filled, fillcolor="#fef3c7", width=1.6];
+    c2 [label="Comprobar numéricamente\nque F'(x) = f(x)", fillcolor="#fff7ed"];
+    c3 [label="Avisar: no hay antiderivada\nelemental", fillcolor="#fee2e2"];
+
+    // Integral definida
+    g1 [label="Buscar discontinuidades en [a, b]", fillcolor="#fdf4ff"];
+    d5 [shape=diamond, label="¿Es continua\nen [a, b]?", style=filled, fillcolor="#fef3c7", width=1.6];
+    g2 [label="Avisar: integral impropia", fillcolor="#fee2e2"];
+    d6 [shape=diamond, label="¿Existe\nF(x)?", style=filled, fillcolor="#fef3c7", width=1.6];
+    g3 [label="F(b) − F(a) (Teorema Fundamental)\n+ comprobación con Simpson", fillcolor="#fdf4ff"];
+    g4 [label="Aproximar con Simpson adaptativo", fillcolor="#fdf4ff"];
+
+    m1 [label="Mostrar el ResultadoCalculo\n(resultado, métodos usados y avisos)"];
+    m2 [label="Dibujar la gráfica\n(curvas, área o recta tangente)"];
+    m3 [label="Guardar la consulta en el historial"];
+
+    inicio -> a1 -> a2 -> d1;
+    d1 -> e1 [xlabel=" sí "];
+    e1 -> fin;
+    d1 -> a3 [xlabel=" no "];
+    a3 -> d2;
+    d2 -> b1 [xlabel=" Derivada "];
+    d2 -> c1 [xlabel=" Indefinida "];
+    d2 -> g1 [xlabel=" Definida "];
+
+    b1 -> b2 -> d3;
+    d3 -> b3 [xlabel=" sí "];
+    d3 -> m1 [xlabel=" no "];
+    b3 -> m1;
+
+    c1 -> d4;
+    d4 -> c2 [xlabel=" sí "];
+    d4 -> c3 [xlabel=" no "];
+    c2 -> m1;
+    c3 -> m1;
+
+    g1 -> d5;
+    d5 -> g2 [xlabel=" no "];
+    d5 -> d6 [xlabel=" sí "];
+    d6 -> g3 [xlabel=" sí "];
+    d6 -> g4 [xlabel=" no "];
+    g2 -> m1;
+    g3 -> m1;
+    g4 -> m1;
+
+    m1 -> m2 -> m3 -> fin;
+}
