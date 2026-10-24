@@ -7,3 +7,4 @@ public class ErrorCalculo extends Exception {
         super(mensaje);
     }
 }
+//manejo error
