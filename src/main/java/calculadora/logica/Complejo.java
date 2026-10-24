@@ -1,4 +1,5 @@
 package calculadora.logica;
+//trabajito
 
 /** Número complejo a + bi (se usa para encontrar las raíces de un polinomio). */
 public record Complejo(double re, double im) {
